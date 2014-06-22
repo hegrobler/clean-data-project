@@ -1,24 +1,19 @@
 #Overview
 The following document provides and overview of the data analysis completed as part of the Coursera Getting and Cleaning Data course. It describes the data used in the analysis and the steps completed to explore and prepare the data so that it is ready for analysis. 
 
-##Exercise Tasks
-The exercise calls for the following tasks to be completed:
-
-1. Retrieve the sample data
-1. Merge the training and the test sets found in the sample dataset into one dataset
-1. Extract only the measurements that contain the word mean and std (standard deviation) for each measurement
-1. Add descriptive activity names to each measurement
-1. Rename variables (columns) in the dataset to be descriptive
-1. Apply any other necessary transformations on the data to make it ready for analysis 
-1. Save above dataset to a file (**full_dataset.txt**)
-1. Create a second, independent tidy data set with the average of each variable for each activity and each subject
-1. Save the second dataset to a second file (**avg_by_subject_dataset.txt**)
-
 ##Tools
 The following tools were used to complete the exercise:
 
 * [Notepad++](http://notepad-plus-plus.org/): Used in initial exploration of the data. The tool is able to work with relatively large datasets with a small memory footprint. 
 * [R](http://www.r-project.org/) and [RStudio](http://www.rstudio.com/): Used to analyse and clean the data
+
+##Requirements
+The scripts were designed to be reproducible so any person will be able to reproduce the exercise on their own pc. The following notes the environment that the scripts were developed and run in. Running the scripts in a different environment may have varied performance but the results should still be the same.
+
+* Pentium I7 Processor with 16Gb memory
+* Windows 8 64-bit
+* RStudio version 0.98.507
+* R version 3.1.0
 
 ##Tidy Data Principles:
 The following principles were considered during the exercise:
@@ -53,6 +48,49 @@ The following provides and overview of the files relevant to the Coursera Gettin
 1. **train/X_train.txt** and **test/X_test.txt**: Training and test dataset
 1. **train/y_train.txt** and **y_test.txt**: Training and test dataset activity labels
 1. **train/subject_train.txt** and **test/subject_test.txt**: Subject information
+
+##Variables
+The following is the contents of **features_info.txt** which describes the variables. This information is summarised in this file for convenience. **Please use the original file as the main point of reference.**
+
+The data was retrieved from an accelerometer and gyroscope with 3-axial raw signals tAcc-XYZ and tGyro-XYZ. The time domain signals are prefixed with t were captured at a constant rate of 50 Hz. These signals were filtered using a median filter and a 3rd order low pass Butterworth filter with a corner frequency of 20 Hz to remove noise. Similarly, the acceleration signal was then separated into body and gravity acceleration signals (tBodyAcc-XYZ and tGravityAcc-XYZ) using another low pass Butterworth filter with a corner frequency of 0.3 Hz. 
+
+Subsequently, the body linear acceleration and angular velocity were derived in time to obtain Jerk signals (tBodyAccJerk-XYZ and tBodyGyroJerk-XYZ). Also the magnitude of these three-dimensional signals were calculated using the Euclidean norm (tBodyAccMag, tGravityAccMag, tBodyAccJerkMag, tBodyGyroMag, tBodyGyroJerkMag). 
+
+Finally a Fast Fourier Transform (FFT) was applied to some of these signals producing fBodyAcc-XYZ, fBodyAccJerk-XYZ, fBodyGyro-XYZ, fBodyAccJerkMag, fBodyGyroMag, fBodyGyroJerkMag. (Note the 'f' to indicate frequency domain signals). 
+
+These signals were used to estimate variables of the feature vector for each pattern:  
+'-XYZ' is used to denote 3-axial signals in the X, Y and Z directions.
+
+* tBodyAcc-XYZ
+* tGravityAcc-XYZ
+* tBodyAccJerk-XYZ
+* tBodyGyro-XYZ
+* tBodyGyroJerk-XYZ
+* tBodyAccMag
+* tGravityAccMag
+* tBodyAccJerkMag
+* tBodyGyroMag
+* tBodyGyroJerkMag
+* fBodyAcc-XYZ
+* fBodyAccJerk-XYZ
+* fBodyGyro-XYZ
+* fBodyAccMag
+* fBodyAccJerkMag
+* fBodyGyroMag
+* fBodyGyroJerkMag
+
+The set of variables that were estimated from these signals are: 
+
+* mean(): Mean value
+* std(): Standard deviation
+
+Additional vectors obtained by averaging the signals in a signal window sample. These are used on the angle() variable:
+
+* gravityMean
+* tBodyAccMean
+* tBodyAccJerkMean
+* tBodyGyroMean
+* tBodyGyroJerkMean
 
 #Data Analysis
 ##Initial Observations
@@ -91,13 +129,32 @@ The same applies to the **test/X_test.txt**, **y_test.txt** and **test/subject_t
 #Data Retrieval and Processing
 The data retrieval and processing was completed with the R programming language using R studio. Each step is documented in detail in the **run_analysis_walkthough.html** file. Please refer to the html file for any questions about the code written in the **run_analysis.R** file.
 
-The scripts were designed to be reproducible so any person will be able to reproduce the exercise on their own pc. The following notes the environment that the scripts were developed and run in. Running the scripts in a different environment may have varied performance but the results should still be the same.
+##First Dataset Result
+The first dataset includes all the observations from the training and test dataset. All columns that do not contain the words mean or std anywhere in the name was removed.
 
-* Pentium I7 Processor with 16Gb memory
-* Windows 8 64-bit
-* RStudio version 0.98.507
-* R version 3.1.0
+The dataset contains **10299** observations and **88** variables. The number of observations correspond to the original [study](http://archive.ics.uci.edu/ml/datasets/Human+Activity+Recognition+Using+Smartphones#). **86** columns consist of variables contain either mean or std in the variable name. The last **2** columns contain the id of the subject that was observed and the name of the activity that the subject performed. 
+
+A sample from the resulting dataset as well as a **comprehensive list of column names** can be found in the **run_analysis_walkthough.html** file under the **Step 10: Add the activityName factor and remove the activityLabelId** heading.
+
+The variables are described under the Variables heading in the previous section.
+
+##Second Dataset Result
+The second result set contains a summarized version of the dataset described in the previous step. It contains the average of each column broken down by subject and activity. The sample from this dataset can be seen in the  **run_analysis_walkthough.html** file under the **Step 12: Summarise the dataset** heading.
+
+Review of assignment result
+---------------------------------
+
+The assignment asked that the following be done. Note the values in bold at the end of each line which corresponds to the step above that fulfils that assignment task.
+
+You should create one R script called run_analysis.R that does the following. 
+
+1. Merges the training and the test sets to create one data set (**Step 9**)
+1. Extracts only the measurements on the mean and standard deviation for each measurement (**Step 9**)
+1. Uses descriptive activity names to name the activities in the data set (**Step 10**)
+1. Appropriately labels the data set with descriptive variable names (**Step 7 & Step 4**)
+1. Creates a second, independent tidy data set with the average of each variable for each activity and each subject. (**Step 12**)
 
 
 
- 
+
+  

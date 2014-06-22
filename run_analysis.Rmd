@@ -3,12 +3,11 @@ Coursera Cleaning Data Project
 
 This file documents the **run_analysis.R** script. It describes each of the steps completed in the **run_analysis.R** script in detail.
 
-The following summarizes the environment that the tests were run in. Please ensure that all the packages listed are loaded before running the script to ensure that the script will run without error:
+The following summarizes the environment that the tests were run in. If you run into any issues please ensure that all the packages listed below are loaded:
 ```{r}
 sessionInfo()
 Sys.time()
 ```
-
 
 Step 1: Configure directory and file paths 
 --------------------------------
@@ -17,8 +16,12 @@ The first line indicates the directory where **run_analysis.R** is located.
 **Please adjust this value to suit the environment that it is run on**
 
 ```{r Step1}
-#path <- paste(getwd(), "clean-data-project", sep="/")
-path <- "C:/Users/Lambert/Documents/R/week3/clean-data-project"
+path = getwd()
+if (grep("clean-data-project", getwd()) == FALSE) {
+  path <- paste(getwd(), "clean-data-project", sep="/")  
+}
+
+message(paste("Path:",path))
 
 if (!file.exists(path)) {
   stop("Could not find the specified folder. Please upadte the path above")
@@ -42,8 +45,9 @@ Step 2: Download the data into folder clean-data-project
 --------------------------------
 This step may take some time to complete. In order to run the script more than once you should:
 * Manually download the (zip file)[https://d396qusza40orc.cloudfront.net/getdata%2Fprojectfiles%2FUCI%20HAR%20Dataset.zip]
-* Extract the contents to **UCI HAR Dataset** folder. NOTE: This folder must be in the same location as the **run_analysis.R** file
-* Comment out the following 4 lines by placing a # in front of each line 
+* Extract the contents to **UCI HAR Dataset** folder. 
+  NOTE: This folder must be in the same location as the **run_analysis.R** file
+* Comment out the following 4 lines by placing a # in front of each line. Note that this will not run in the Rmd file as its main purpose is to document **run_analysis.R**. Commenting out the lines should be done in **run_analysis.R** if the files are already present
 
 ```
 temp <- tempfile()
@@ -72,7 +76,7 @@ checkFileExists <- function (file, description) {
 
 Step 4: Declare loadDataset function
 --------------------------------
-This function loads a data set from the different files and merges the data together into one dataset. It can be reused to load the training set as well as the test set
+This function loads data from the different files and merges the data together into one dataset. It can be re-used to load the training set as well as the test set
 
 **Parameters:**
 * **subjectFile**: The subjects file eg. subject_test.txt
@@ -228,10 +232,16 @@ head(ds[c(1:6, 87,88)])
 
 ```
 
-We can also see that the training set has 10299 observations and 88 variables.
+We can also see that the training set has 10299 observations and 88 variables. The number of observations relates to the value indicated in the original study.
 ```{r step10c}
 dim(ds)
 ```
+
+The following provides a list of column names that are left in the dataset.
+```{r step10d}
+names(ds)
+```
+
 
 Step 11: Write the first dataset
 --------------------------------
@@ -265,3 +275,4 @@ Step 13: Write the second dataset
 ```{r step13}
 write.csv(result, paste(path, "avg_by_subject_dataset.txt", sep="/"), row.names = FALSE, quote=FALSE)
 ```
+

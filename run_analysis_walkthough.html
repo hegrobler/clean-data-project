@@ -5,7 +5,7 @@
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
 <meta http-equiv="x-ua-compatible" content="IE=9" >
 
-<title>    highlight: zenburn</title>
+<title>Coursera Cleaning Data Project</title>
 
 <style type="text/css">
 body, td {
@@ -179,31 +179,59 @@ hljs.initHighlightingOnLoad();
 </head>
 
 <body>
-<p>install.packages(&ldquo;knitr&rdquo;)
-install.packages(&ldquo;markdown&rdquo;)</p>
-
-<hr/>
-
-<p>title: &ldquo;Coursera Cleaning Data Project&rdquo;
-output:
-  pdf_document:
-    toc: true</p>
-
-<h2>    highlight: zenburn</h2>
-
 <h1>Coursera Cleaning Data Project</h1>
 
 <p>This file documents the <strong>run_analysis.R</strong> script. It describes each of the steps completed in the <strong>run_analysis.R</strong> script in detail.</p>
 
+<p>The following summarizes the environment that the tests were run in. If you run into any issues please ensure that all the packages listed below are loaded:</p>
+
+<pre><code class="r">sessionInfo()
+</code></pre>
+
+<pre><code>## R version 3.1.0 (2014-04-10)
+## Platform: x86_64-w64-mingw32/x64 (64-bit)
+## 
+## locale:
+## [1] LC_COLLATE=English_United States.1252 
+## [2] LC_CTYPE=English_United States.1252   
+## [3] LC_MONETARY=English_United States.1252
+## [4] LC_NUMERIC=C                          
+## [5] LC_TIME=English_United States.1252    
+## 
+## attached base packages:
+## [1] stats     graphics  grDevices utils     datasets  methods   base     
+## 
+## other attached packages:
+## [1] knitr_1.6
+## 
+## loaded via a namespace (and not attached):
+## [1] evaluate_0.5.5 formatR_0.10   stringr_0.6.2  tools_3.1.0
+</code></pre>
+
+<pre><code class="r">Sys.time()
+</code></pre>
+
+<pre><code>## [1] &quot;2014-06-22 19:58:06 SAST&quot;
+</code></pre>
+
 <h2>Step 1: Configure directory and file paths </h2>
 
-<p>The first line indicates the directory where <strong>run_analysis.R</strong> is located.
-<strong>Please adjust this value to suit the environment that it is run on</strong></p>
+<p>The first line indicates the directory where <strong>run_analysis.R</strong> is located.</p>
 
-<pre><code class="r">#path &lt;- paste(getwd(), &quot;clean-data-project&quot;, sep=&quot;/&quot;)
-path &lt;- &quot;C:/Users/Lambert/Documents/R/week3/clean-data-project&quot;
+<p><strong>Please adjust this value to suit the environment that it is run on</strong></p>
 
-if (!file.exists(path)) {
+<pre><code class="r">path = getwd()
+if (grep(&quot;clean-data-project&quot;, getwd()) == FALSE) {
+  path &lt;- paste(getwd(), &quot;clean-data-project&quot;, sep=&quot;/&quot;)  
+}
+
+message(paste(&quot;Path:&quot;,path))
+</code></pre>
+
+<pre><code>## Path: C:/Users/Lambert/Documents/R/week3/clean-data-project
+</code></pre>
+
+<pre><code class="r">if (!file.exists(path)) {
   stop(&quot;Could not find the specified folder. Please upadte the path above&quot;)
 }
 
@@ -227,8 +255,9 @@ testLabelFile &lt;- paste(path, &quot;/UCI HAR Dataset/test/y_test.txt&quot;, se
 
 <ul>
 <li>Manually download the (zip file)[<a href="https://d396qusza40orc.cloudfront.net/getdata%2Fprojectfiles%2FUCI%20HAR%20Dataset.zip">https://d396qusza40orc.cloudfront.net/getdata%2Fprojectfiles%2FUCI%20HAR%20Dataset.zip</a>]</li>
-<li>Extract the contents to <strong>UCI HAR Dataset</strong> folder. NOTE: This folder must be in the same location as the <strong>run_analysis.R</strong> file</li>
-<li>Comment out the following 4 lines by placing a # in front of each line </li>
+<li>Extract the contents to <strong>UCI HAR Dataset</strong> folder. 
+NOTE: This folder must be in the same location as the <strong>run_analysis.R</strong> file</li>
+<li>Comment out the following 4 lines by placing a # in front of each line. Note that this will not run in the Rmd file as its main purpose is to document <strong>run_analysis.R</strong>. Commenting out the lines should be done in <strong>run_analysis.R</strong> if the files are already present</li>
 </ul>
 
 <pre><code>temp &lt;- tempfile()
@@ -258,7 +287,7 @@ unlink(temp)
 
 <h2>Step 4: Declare loadDataset function</h2>
 
-<p>This function loads a data set from the different files and merges the data together into one dataset. It can be reused to load the training set as well as the test set</p>
+<p>This function loads data from the different files and merges the data together into one dataset. It can be re-used to load the training set as well as the test set</p>
 
 <p><strong>Parameters:</strong></p>
 
@@ -467,12 +496,107 @@ ds &lt;- ds[,!(names(ds) %in% &quot;activityLabelId&quot;)]
 ## 6      -0.9954         1     STANDING
 </code></pre>
 
-<p>We can also see that the training set has 10299 observations and 88 variables.</p>
+<p>We can also see that the training set has 10299 observations and 88 variables. The number of observations relates to the value indicated in the original study.</p>
 
 <pre><code class="r">dim(ds)
 </code></pre>
 
 <pre><code>## [1] 10299    88
+</code></pre>
+
+<p>The following provides a list of column names that are left in the dataset.</p>
+
+<pre><code class="r">names(ds)
+</code></pre>
+
+<pre><code>##  [1] &quot;tBodyAccmeanX&quot;                    
+##  [2] &quot;tBodyAccmeanY&quot;                    
+##  [3] &quot;tBodyAccmeanZ&quot;                    
+##  [4] &quot;tBodyAccstdX&quot;                     
+##  [5] &quot;tBodyAccstdY&quot;                     
+##  [6] &quot;tBodyAccstdZ&quot;                     
+##  [7] &quot;tGravityAccmeanX&quot;                 
+##  [8] &quot;tGravityAccmeanY&quot;                 
+##  [9] &quot;tGravityAccmeanZ&quot;                 
+## [10] &quot;tGravityAccstdX&quot;                  
+## [11] &quot;tGravityAccstdY&quot;                  
+## [12] &quot;tGravityAccstdZ&quot;                  
+## [13] &quot;tBodyAccJerkmeanX&quot;                
+## [14] &quot;tBodyAccJerkmeanY&quot;                
+## [15] &quot;tBodyAccJerkmeanZ&quot;                
+## [16] &quot;tBodyAccJerkstdX&quot;                 
+## [17] &quot;tBodyAccJerkstdY&quot;                 
+## [18] &quot;tBodyAccJerkstdZ&quot;                 
+## [19] &quot;tBodyGyromeanX&quot;                   
+## [20] &quot;tBodyGyromeanY&quot;                   
+## [21] &quot;tBodyGyromeanZ&quot;                   
+## [22] &quot;tBodyGyrostdX&quot;                    
+## [23] &quot;tBodyGyrostdY&quot;                    
+## [24] &quot;tBodyGyrostdZ&quot;                    
+## [25] &quot;tBodyGyroJerkmeanX&quot;               
+## [26] &quot;tBodyGyroJerkmeanY&quot;               
+## [27] &quot;tBodyGyroJerkmeanZ&quot;               
+## [28] &quot;tBodyGyroJerkstdX&quot;                
+## [29] &quot;tBodyGyroJerkstdY&quot;                
+## [30] &quot;tBodyGyroJerkstdZ&quot;                
+## [31] &quot;tBodyAccMagmean&quot;                  
+## [32] &quot;tBodyAccMagstd&quot;                   
+## [33] &quot;tGravityAccMagmean&quot;               
+## [34] &quot;tGravityAccMagstd&quot;                
+## [35] &quot;tBodyAccJerkMagmean&quot;              
+## [36] &quot;tBodyAccJerkMagstd&quot;               
+## [37] &quot;tBodyGyroMagmean&quot;                 
+## [38] &quot;tBodyGyroMagstd&quot;                  
+## [39] &quot;tBodyGyroJerkMagmean&quot;             
+## [40] &quot;tBodyGyroJerkMagstd&quot;              
+## [41] &quot;fBodyAccmeanX&quot;                    
+## [42] &quot;fBodyAccmeanY&quot;                    
+## [43] &quot;fBodyAccmeanZ&quot;                    
+## [44] &quot;fBodyAccstdX&quot;                     
+## [45] &quot;fBodyAccstdY&quot;                     
+## [46] &quot;fBodyAccstdZ&quot;                     
+## [47] &quot;fBodyAccmeanFreqX&quot;                
+## [48] &quot;fBodyAccmeanFreqY&quot;                
+## [49] &quot;fBodyAccmeanFreqZ&quot;                
+## [50] &quot;fBodyAccJerkmeanX&quot;                
+## [51] &quot;fBodyAccJerkmeanY&quot;                
+## [52] &quot;fBodyAccJerkmeanZ&quot;                
+## [53] &quot;fBodyAccJerkstdX&quot;                 
+## [54] &quot;fBodyAccJerkstdY&quot;                 
+## [55] &quot;fBodyAccJerkstdZ&quot;                 
+## [56] &quot;fBodyAccJerkmeanFreqX&quot;            
+## [57] &quot;fBodyAccJerkmeanFreqY&quot;            
+## [58] &quot;fBodyAccJerkmeanFreqZ&quot;            
+## [59] &quot;fBodyGyromeanX&quot;                   
+## [60] &quot;fBodyGyromeanY&quot;                   
+## [61] &quot;fBodyGyromeanZ&quot;                   
+## [62] &quot;fBodyGyrostdX&quot;                    
+## [63] &quot;fBodyGyrostdY&quot;                    
+## [64] &quot;fBodyGyrostdZ&quot;                    
+## [65] &quot;fBodyGyromeanFreqX&quot;               
+## [66] &quot;fBodyGyromeanFreqY&quot;               
+## [67] &quot;fBodyGyromeanFreqZ&quot;               
+## [68] &quot;fBodyAccMagmean&quot;                  
+## [69] &quot;fBodyAccMagstd&quot;                   
+## [70] &quot;fBodyAccMagmeanFreq&quot;              
+## [71] &quot;fBodyBodyAccJerkMagmean&quot;          
+## [72] &quot;fBodyBodyAccJerkMagstd&quot;           
+## [73] &quot;fBodyBodyAccJerkMagmeanFreq&quot;      
+## [74] &quot;fBodyBodyGyroMagmean&quot;             
+## [75] &quot;fBodyBodyGyroMagstd&quot;              
+## [76] &quot;fBodyBodyGyroMagmeanFreq&quot;         
+## [77] &quot;fBodyBodyGyroJerkMagmean&quot;         
+## [78] &quot;fBodyBodyGyroJerkMagstd&quot;          
+## [79] &quot;fBodyBodyGyroJerkMagmeanFreq&quot;     
+## [80] &quot;angletBodyAccMeangravity&quot;         
+## [81] &quot;angletBodyAccJerkMeangravityMean&quot; 
+## [82] &quot;angletBodyGyroMeangravityMean&quot;    
+## [83] &quot;angletBodyGyroJerkMeangravityMean&quot;
+## [84] &quot;angleXgravityMean&quot;                
+## [85] &quot;angleYgravityMean&quot;                
+## [86] &quot;angleZgravityMean&quot;                
+## [87] &quot;subjectId&quot;                        
+## [88] &quot;activityName&quot;
 </code></pre>
 
 <h2>Step 11: Write the first dataset</h2>

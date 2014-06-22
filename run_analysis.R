@@ -2,8 +2,12 @@
 # 1. Set up all the paths
 ##################################################################################
 #Where is the script
-#path <- paste(getwd(), "clean-data-project", sep="/")
-path <- "C:/Users/Lambert/Documents/R/week3/clean-data-project"
+path = getwd()
+if (grep("clean-data-project", getwd()) == FALSE) {
+  path <- paste(getwd(), "clean-data-project", sep="/")  
+}
+
+message(paste("Path:",path))
 
 if (!file.exists(path)) {
   stop("Could not find the specified folder. Please upadte the path above")
